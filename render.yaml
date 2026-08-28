@@ -1,0 +1,45 @@
+# Render blueprint for the PulseAI API.
+#
+# IMPORTANT — memory. PyTorch plus a 67M-parameter DistilBERT needs roughly
+# 800MB-1GB of RAM at rest. Render's free instance type provides 512MB and this
+# service WILL be OOM-killed on it. `starter` is the smallest plan that works.
+#
+# If a free deployment is the requirement, use Hugging Face Spaces instead
+# (16GB RAM on the free CPU tier) - see docs/DEPLOYMENT.md.
+
+services:
+  - type: web
+    name: pulseai-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    region: singapore
+    healthCheckPath: /health
+    autoDeploy: true
+
+    envVars:
+      # Set in the Render dashboard, never committed.
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: pulseai
+      # The fine-tuned checkpoint is not in git (260MB). Publish it to the
+      # Hugging Face Hub and put the repo id here, e.g.
+      # "AkashKeshari111/pulseai-distilbert-sentiment". Leaving MODEL_DIR
+      # pointing at a path that does not exist makes the loader fall through to
+      # this value instead.
+      - key: MODEL_DIR
+        value: models/distilbert-sentiment
+      - key: FALLBACK_MODEL
+        sync: false
+      - key: MAX_SEQ_LENGTH
+        value: 256
+      # The Vercel URL of the dashboard.
+      - key: CORS_ORIGINS
+        sync: false
+      - key: API_KEY
+        sync: false
+      # Keep the Hub cache on the writable disk rather than re-downloading on
+      # every cold start.
+      - key: HF_HOME
+        value: /app/.cache/huggingface

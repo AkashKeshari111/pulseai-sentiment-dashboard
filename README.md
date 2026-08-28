@@ -415,6 +415,7 @@ on an individual customer, and low-confidence predictions should always be revie
 - **[`notebooks/01_sentiment_analysis_capstone.ipynb`](notebooks/01_sentiment_analysis_capstone.ipynb)** — the full analysis: EDA, preprocessing, both models, evaluation, error analysis, explainability, benchmarks
 - **[`reports/FINAL_REPORT.md`](reports/FINAL_REPORT.md)** — analytical report: performance, insights, business implications
 - **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** — system design and data flow
+- **[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)** — hosting the API and dashboard, and where the model weights live
 - **[`docs/LEARNING_PATH.md`](docs/LEARNING_PATH.md)** — a staged route through the codebase: read it, run it, break it, explain it
 - **[`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md)** — timed shot list for the demonstration video
 
