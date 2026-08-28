@@ -1,0 +1,347 @@
+{
+  "models": {
+    "baseline": {
+      "accuracy": 0.725,
+      "f1_macro": 0.7237095491829589,
+      "f1_weighted": 0.7237614039575503,
+      "per_class": {
+        "negative": {
+          "precision": 0.7720588235294118,
+          "recall": 0.7871064467766117,
+          "f1": 0.779510022271715,
+          "support": 667
+        },
+        "neutral": {
+          "precision": 0.6356466876971609,
+          "recall": 0.6051051051051051,
+          "f1": 0.62,
+          "support": 666
+        },
+        "positive": {
+          "precision": 0.760932944606414,
+          "recall": 0.782608695652174,
+          "f1": 0.7716186252771619,
+          "support": 667
+        }
+      },
+      "confusion_matrix": [
+        [
+          525,
+          120,
+          22
+        ],
+        [
+          121,
+          403,
+          142
+        ],
+        [
+          34,
+          111,
+          522
+        ]
+      ],
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "n_samples": 2000,
+      "mean_confidence": 0.6524270515806656,
+      "mean_confidence_correct": 0.6893444036072223,
+      "mean_confidence_incorrect": 0.5550994871470162,
+      "model": "TF-IDF + Logistic Regression",
+      "model_key": "baseline",
+      "best_C": 1.0,
+      "val_f1_macro": 0.7356559037719171,
+      "latency_ms_per_sample": 0.926,
+      "n_features": 109673,
+      "top_features": {
+        "negative": [
+          [
+            "not",
+            3.151314000700606
+          ],
+          [
+            "worst",
+            2.9100518526583183
+          ],
+          [
+            "poor",
+            2.441693542409744
+          ],
+          [
+            "not good",
+            2.260436654120312
+          ],
+          [
+            "bland",
+            2.237517927143731
+          ],
+          [
+            "no",
+            2.1692908955339565
+          ],
+          [
+            "not even",
+            1.9160095311064964
+          ],
+          [
+            "terrible",
+            1.8064122333775383
+          ],
+          [
+            "told",
+            1.7873728721391344
+          ],
+          [
+            "rude",
+            1.7478718993417255
+          ],
+          [
+            "cold",
+            1.6192599246788855
+          ],
+          [
+            "definite not",
+            1.5664589822897865
+          ],
+          [
+            "awful",
+            1.5075218238630406
+          ],
+          [
+            "lack",
+            1.5005506440678762
+          ],
+          [
+            "two star",
+            1.495543820373792
+          ]
+        ],
+        "neutral": [
+          [
+            "but",
+            2.6309423958650324
+          ],
+          [
+            "ok",
+            2.4318052369983083
+          ],
+          [
+            "three star",
+            1.9195399689588217
+          ],
+          [
+            "good",
+            1.9019607748140348
+          ],
+          [
+            "decent",
+            1.891176674438718
+          ],
+          [
+            "dive",
+            1.8121249039869378
+          ],
+          [
+            "phoenix",
+            1.715633254457373
+          ],
+          [
+            "not bad",
+            1.610117457229179
+          ],
+          [
+            "bit",
+            1.4479607277723185
+          ],
+          [
+            "not great",
+            1.3547965065049077
+          ],
+          [
+            "but not",
+            1.2912153263563344
+          ],
+          [
+            "however",
+            1.2621621233434601
+          ],
+          [
+            "food good",
+            1.2543331340496762
+          ],
+          [
+            "not best",
+            1.1459111860797917
+          ],
+          [
+            "okay",
+            1.143769485151836
+          ]
+        ],
+        "positive": [
+          [
+            "great",
+            3.7171815688436487
+          ],
+          [
+            "best",
+            2.731732173092465
+          ],
+          [
+            "love",
+            2.68727811796173
+          ],
+          [
+            "amaz",
+            2.3384469851604037
+          ],
+          [
+            "deliciou",
+            2.2666440885771277
+          ],
+          [
+            "not disappoint",
+            2.204698722933354
+          ],
+          [
+            "excellent",
+            1.985334187812046
+          ],
+          [
+            "awesome",
+            1.9243405828204319
+          ],
+          [
+            "fantastic",
+            1.842921468015823
+          ],
+          [
+            "perfect",
+            1.7322565822149942
+          ],
+          [
+            "favorite",
+            1.598464193522406
+          ],
+          [
+            "alway",
+            1.5504127274711152
+          ],
+          [
+            "wonderful",
+            1.4161884885785587
+          ],
+          [
+            "fresh",
+            1.4057885769072875
+          ],
+          [
+            "love place",
+            1.3279622009990557
+          ]
+        ]
+      }
+    },
+    "distilbert_seq128": {
+      "accuracy": 0.717,
+      "f1_macro": 0.7179728846868657,
+      "f1_weighted": 0.7180267863834465,
+      "per_class": {
+        "negative": {
+          "precision": 0.7892307692307692,
+          "recall": 0.7691154422788605,
+          "f1": 0.7790432801822323,
+          "support": 667
+        },
+        "neutral": {
+          "precision": 0.5991316931982634,
+          "recall": 0.6216216216216216,
+          "f1": 0.6101694915254238,
+          "support": 666
+        },
+        "positive": {
+          "precision": 0.7693474962063733,
+          "recall": 0.760119940029985,
+          "f1": 0.7647058823529411,
+          "support": 667
+        }
+      },
+      "confusion_matrix": [
+        [
+          513,
+          135,
+          19
+        ],
+        [
+          119,
+          414,
+          133
+        ],
+        [
+          18,
+          142,
+          507
+        ]
+      ],
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "n_samples": 2000,
+      "mean_confidence": 0.799985408782959,
+      "mean_confidence_correct": 0.8385027050971985,
+      "mean_confidence_incorrect": 0.7023988962173462,
+      "model": "DistilBERT fine-tuned (max_seq_length=128)",
+      "model_key": "distilbert_seq128",
+      "parameters": 66955779,
+      "best_epoch": 2,
+      "val_f1_macro": 0.73,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.7613,
+          "val_loss": 0.6371,
+          "val_accuracy": 0.715,
+          "val_f1_macro": 0.7188,
+          "seconds": 2486.6
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.5133,
+          "val_loss": 0.6374,
+          "val_accuracy": 0.729,
+          "val_f1_macro": 0.73,
+          "seconds": 3794.1
+        }
+      ],
+      "train_seconds": 6281.3,
+      "latency_ms_per_sample": 88.86,
+      "device": "cpu",
+      "hyperparameters": {
+        "dataset": "yelp_review_full",
+        "base_checkpoint": "distilbert-base-uncased",
+        "train_size": 12000,
+        "val_size": 2000,
+        "test_size": 2000,
+        "max_seq_length": 128,
+        "epochs": 2,
+        "batch_size": 16,
+        "eval_batch_size": 64,
+        "learning_rate": 3e-05,
+        "weight_decay": 0.01,
+        "warmup_ratio": 0.1,
+        "seed": 42
+      },
+      "ablation_note": "First run. Only 51.8% of reviews fit inside a 128-token window, so long reviews were truncated mid-text. Kept as the control for the 256-token run."
+    }
+  },
+  "labels": [
+    "negative",
+    "neutral",
+    "positive"
+  ]
+}

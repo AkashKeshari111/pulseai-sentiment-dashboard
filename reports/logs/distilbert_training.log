@@ -1,0 +1,34 @@
+[bert] device=cpu | torch=2.8.0+cpu | Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+[bert] loading tokenizer + distilbert-base-uncased
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[bert] 67.0M params | 751 steps/epoch | 1502 total steps | amp=False
+You're using a DistilBertTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[bert] epoch 1/2  step 37/751  loss=1.0974  lr=7.40e-06  0.24 it/s  eta 49.0m[bert] epoch 1/2  step 74/751  loss=1.0895  lr=1.48e-05  0.29 it/s  eta 39.0m[bert] epoch 1/2  step 111/751  loss=1.0406  lr=2.22e-05  0.31 it/s  eta 34.3m[bert] epoch 1/2  step 148/751  loss=0.9837  lr=2.96e-05  0.32 it/s  eta 31.3m[bert] epoch 1/2  step 185/751  loss=0.9336  lr=2.92e-05  0.32 it/s  eta 29.0m[bert] epoch 1/2  step 222/751  loss=0.9093  lr=2.84e-05  0.33 it/s  eta 26.7m[bert] epoch 1/2  step 259/751  loss=0.8858  lr=2.76e-05  0.34 it/s  eta 24.4m[bert] epoch 1/2  step 296/751  loss=0.8722  lr=2.68e-05  0.34 it/s  eta 22.4m[bert] epoch 1/2  step 333/751  loss=0.8571  lr=2.59e-05  0.34 it/s  eta 20.5m[bert] epoch 1/2  step 370/751  loss=0.8468  lr=2.51e-05  0.34 it/s  eta 18.8m[bert] epoch 1/2  step 407/751  loss=0.8353  lr=2.43e-05  0.34 it/s  eta 17.0m[bert] epoch 1/2  step 444/751  loss=0.8249  lr=2.35e-05  0.33 it/s  eta 15.3m[bert] epoch 1/2  step 481/751  loss=0.8162  lr=2.27e-05  0.33 it/s  eta 13.5m[bert] epoch 1/2  step 518/751  loss=0.8071  lr=2.18e-05  0.33 it/s  eta 11.8m[bert] epoch 1/2  step 555/751  loss=0.7953  lr=2.10e-05  0.33 it/s  eta 9.9m[bert] epoch 1/2  step 592/751  loss=0.7865  lr=2.02e-05  0.33 it/s  eta 8.1m[bert] epoch 1/2  step 629/751  loss=0.7816  lr=1.94e-05  0.33 it/s  eta 6.2m[bert] epoch 1/2  step 666/751  loss=0.7752  lr=1.86e-05  0.33 it/s  eta 4.3m[bert] epoch 1/2  step 703/751  loss=0.7685  lr=1.77e-05  0.33 it/s  eta 2.5m[bert] epoch 1/2  step 740/751  loss=0.7613  lr=1.69e-05  0.32 it/s  eta 0.6m[bert] epoch 1/2  step 751/751  loss=0.7613  lr=1.67e-05  0.32 it/s  eta 0.0m
+[bert] epoch 1 | train_loss=0.7613 val_loss=0.6371 val_acc=0.715 val_f1=0.7188 (2486.6s)
+[bert] new best (macro-F1 0.7188) -> saved to D:\my\LaunchED\Major Project\MP1\models\distilbert-sentiment
+[bert] epoch 2/2  step 37/751  loss=0.5778  lr=1.58e-05  0.32 it/s  eta 36.8m[bert] epoch 2/2  step 74/751  loss=0.5474  lr=1.50e-05  0.33 it/s  eta 34.7m[bert] epoch 2/2  step 111/751  loss=0.5373  lr=1.42e-05  0.32 it/s  eta 33.7m[bert] epoch 2/2  step 148/751  loss=0.5367  lr=1.34e-05  0.29 it/s  eta 34.9m[bert] epoch 2/2  step 185/751  loss=0.5196  lr=1.26e-05  0.22 it/s  eta 42.0m[bert] epoch 2/2  step 222/751  loss=0.5215  lr=1.17e-05  0.22 it/s  eta 40.2m[bert] epoch 2/2  step 259/751  loss=0.5123  lr=1.09e-05  0.21 it/s  eta 38.7m[bert] epoch 2/2  step 296/751  loss=0.5246  lr=1.01e-05  0.21 it/s  eta 36.6m[bert] epoch 2/2  step 333/751  loss=0.5226  lr=9.28e-06  0.21 it/s  eta 32.7m[bert] epoch 2/2  step 370/751  loss=0.5256  lr=8.45e-06  0.22 it/s  eta 29.2m[bert] epoch 2/2  step 407/751  loss=0.5173  lr=7.63e-06  0.22 it/s  eta 25.8m[bert] epoch 2/2  step 444/751  loss=0.5183  lr=6.81e-06  0.21 it/s  eta 24.1m[bert] epoch 2/2  step 481/751  loss=0.5186  lr=5.99e-06  0.21 it/s  eta 21.0m[bert] epoch 2/2  step 518/751  loss=0.5198  lr=5.17e-06  0.20 it/s  eta 19.4m[bert] epoch 2/2  step 555/751  loss=0.5169  lr=4.35e-06  0.20 it/s  eta 16.1m[bert] epoch 2/2  step 592/751  loss=0.5195  lr=3.53e-06  0.21 it/s  eta 12.7m[bert] epoch 2/2  step 629/751  loss=0.5177  lr=2.71e-06  0.21 it/s  eta 9.5m[bert] epoch 2/2  step 666/751  loss=0.5150  lr=1.89e-06  0.21 it/s  eta 6.7m[bert] epoch 2/2  step 703/751  loss=0.5138  lr=1.07e-06  0.20 it/s  eta 4.0m[bert] epoch 2/2  step 740/751  loss=0.5124  lr=2.44e-07  0.20 it/s  eta 0.9m[bert] epoch 2/2  step 751/751  loss=0.5133  lr=0.00e+00  0.20 it/s  eta 0.0m
+[bert] epoch 2 | train_loss=0.5133 val_loss=0.6374 val_acc=0.729 val_f1=0.73 (3794.1s)
+[bert] new best (macro-F1 0.7300) -> saved to D:\my\LaunchED\Major Project\MP1\models\distilbert-sentiment
+[bert] reloading best checkpoint (epoch 2) for test evaluation
+
+==============================================================
+  DISTILBERT FINE-TUNED (test set)
+==============================================================
+  accuracy     : 0.7170
+  f1 (macro)   : 0.7180
+  f1 (weighted): 0.7180
+
+  class         precision    recall        f1   support
+  negative          0.789     0.769     0.779       667
+  neutral           0.599     0.622     0.610       666
+  positive          0.769     0.760     0.765       667
+
+  confusion matrix (rows = true, cols = predicted)
+                nega    neut    posi
+  negative       513     135      19
+  neutral        119     414     133
+  positive        18     142     507
+==============================================================
+[bert] total training time: 104.7 min
+[bert] checkpoint: D:\my\LaunchED\Major Project\MP1\models\distilbert-sentiment

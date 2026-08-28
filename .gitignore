@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+*.local
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+.vite/
+npm-debug.log*
+yarn-error.log*
+
+# Model artifacts (large binaries - do not commit)
+models/*
+!models/.gitkeep
+!models/README.md
+
+# Data (regenerate with scripts/prepare_data.py)
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+
+# Reports - keep markdown + figures, ignore scratch
+reports/scratch/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

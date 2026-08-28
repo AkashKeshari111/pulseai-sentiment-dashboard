@@ -1,0 +1,34 @@
+[project]
+name = "pulseai"
+version = "1.0.0"
+description = "Customer sentiment intelligence: fine-tuned DistilBERT, FastAPI, MongoDB Atlas, React"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: requires a live MongoDB (set MONGODB_TEST_URI)",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = ["notebooks", "dashboard", ".venv", "data", "models"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E501",   # long lines are handled by the formatter, not the linter
+    "B008",   # FastAPI's Depends()/Query() defaults are the documented idiom
+    "SIM108", # a ternary is not always clearer than an if/else
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]

@@ -1,0 +1,63 @@
+# =============================================================================
+# PulseAI - full stack
+#
+#   docker compose up --build
+#   dashboard  http://localhost:8080
+#   API docs   http://localhost:8000/docs
+#
+# The database is MongoDB Atlas: put your connection string in .env as
+# MONGODB_URI. Nothing here runs a local mongod, so the container stack is the
+# same locally and in the cloud.
+#
+# Build the API image *after* training, so the fine-tuned checkpoint in models/
+# is baked in. Without it the API still starts and falls back to a Hub model.
+# =============================================================================
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pulseai-api:latest
+    container_name: pulseai-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Requests arrive through the dashboard's nginx proxy on the same origin,
+      # so the browser never issues a cross-origin call in this topology.
+      CORS_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+      MODEL_DIR: models/distilbert-sentiment
+    ports:
+      # host:container - the container always listens on 8000; only the host
+      # side moves, because 8000 is often already in use on a dev machine.
+      - '8020:8000'
+    volumes:
+      # Persist the Hub cache so a restart does not re-download the fallback
+      # model.
+      - hf-cache:/app/.cache/huggingface
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    image: pulseai-dashboard:latest
+    container_name: pulseai-dashboard
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  hf-cache:

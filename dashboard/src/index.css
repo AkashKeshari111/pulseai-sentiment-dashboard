@@ -1,0 +1,283 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Design tokens
+
+   Every colour used by the UI and by every chart is declared once here and
+   referenced by role. Light is the base definition; the dark values are
+   redeclared under both the OS media query and the explicit [data-theme]
+   stamp, so the in-app toggle wins in both directions.
+
+   The chart palette is not chosen by eye. Sentiment is a *diverging* scale
+   (negative pole / neutral midpoint / positive pole) and its steps were
+   validated with the palette validator in both modes:
+
+     light  #e34948 / #898781 / #2a78d6
+            CVD worst-pair dE 8.7 (deutan), normal-vision 17.8, all >= 3:1
+     dark   #e34948 / #8f8d86 / #3987e5
+            CVD worst-pair dE 8.5 (deutan), normal-vision 17.2, all >= 3:1
+
+   Red/green was measured and rejected: at dE 4.1 under deuteranopia the two
+   poles are indistinguishable for red-green colourblind readers - roughly 1 in
+   12 men. Blue-for-positive costs a little familiarity and buys correctness,
+   and every chart also carries a legend plus direct labels so the meaning is
+   never in the hue alone. The neutral midpoint is intentionally achromatic:
+   "no polarity" has to look like no colour.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces and ink */
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --surface-2: #f2f1ed;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --border-strong: rgba(11, 11, 11, 0.18);
+  --overlay: rgba(11, 11, 11, 0.45);
+
+  /* Sentiment - diverging scale */
+  --sentiment-negative: #e34948;
+  --sentiment-neutral: #898781;
+  --sentiment-positive: #2a78d6;
+  --sentiment-negative-soft: rgba(227, 73, 72, 0.14);
+  --sentiment-neutral-soft: rgba(137, 135, 129, 0.14);
+  --sentiment-positive-soft: rgba(42, 120, 214, 0.14);
+
+  /* Categorical slots - used where series are identities, not polarity */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+
+  /* Sequential blue ramp - magnitude encodings (confusion matrix) */
+  --seq-100: #cde2fb;
+  --seq-250: #86b6ef;
+  --seq-400: #3987e5;
+  --seq-550: #1c5cab;
+  --seq-700: #0d366b;
+
+  /* Status - reserved, never reused as a series colour */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+
+  --accent: #2a78d6;
+  --accent-contrast: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme='light'])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --overlay: rgba(0, 0, 0, 0.6);
+
+    --sentiment-negative: #e34948;
+    --sentiment-neutral: #8f8d86;
+    --sentiment-positive: #3987e5;
+    --sentiment-negative-soft: rgba(227, 73, 72, 0.2);
+    --sentiment-neutral-soft: rgba(143, 141, 134, 0.2);
+    --sentiment-positive-soft: rgba(57, 135, 229, 0.2);
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+
+    --seq-100: #0d366b;
+    --seq-250: #1c5cab;
+    --seq-400: #3987e5;
+    --seq-550: #86b6ef;
+    --seq-700: #cde2fb;
+
+    --accent: #3987e5;
+    --accent-contrast: #0d0d0d;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --surface-2: #232322;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --gridline: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  --sentiment-negative: #e34948;
+  --sentiment-neutral: #8f8d86;
+  --sentiment-positive: #3987e5;
+  --sentiment-negative-soft: rgba(227, 73, 72, 0.2);
+  --sentiment-neutral-soft: rgba(143, 141, 134, 0.2);
+  --sentiment-positive-soft: rgba(57, 135, 229, 0.2);
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+
+  --seq-100: #0d366b;
+  --seq-250: #1c5cab;
+  --seq-400: #3987e5;
+  --seq-550: #86b6ef;
+  --seq-700: #cde2fb;
+
+  --accent: #3987e5;
+  --accent-contrast: #0d0d0d;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures for anything that has to line up in a column. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--sentiment-positive-soft);
+}
+
+/* A single, consistent focus ring - keyboard users can always see where they are. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Scrollbars that recede into the surface instead of fighting it. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--baseline) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--baseline);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==========================================================================
+   Recharts overrides - the library's defaults are heavier than the mark specs
+   call for, so grid and axis lines are pushed back to hairlines here rather
+   than being restated on every chart.
+   ========================================================================== */
+
+.recharts-cartesian-grid line {
+  stroke: var(--gridline);
+}
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: var(--baseline);
+}
+.recharts-text {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+.recharts-surface:focus {
+  outline: none;
+}
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+.live-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.slide-in {
+  animation: slide-in 0.28s ease-out;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
