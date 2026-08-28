@@ -72,19 +72,26 @@ PyTorch plus a 67M-parameter model sits around **800 MB–1 GB** resident. Anyth
 
 1. Create a Space at <https://huggingface.co/new-space> → SDK **Docker** → hardware
    **CPU basic (free)**
-2. Push this repo to it:
+
+2. Copy the Space README template over the repo README *in the Space only* — Spaces read
+   configuration from YAML frontmatter that would look wrong on GitHub:
+   ```bash
+   cp deploy/huggingface-space-README.md README.md
+   ```
+
+3. Push:
    ```bash
    git remote add space https://huggingface.co/spaces/AkashKeshari111/pulseai-api
    git push space main
    ```
-3. In **Settings → Variables and secrets** add `MONGODB_URI`, `FALLBACK_MODEL`,
-   `MAX_SEQ_LENGTH=256`, and `CORS_ORIGINS` (your Vercel URL)
-4. Spaces expect the container to listen on **7860**, so add to the `Dockerfile`:
-   ```dockerfile
-   ENV API_PORT=7860
-   EXPOSE 7860
-   CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]
-   ```
+
+4. In **Settings → Variables and secrets** add `MONGODB_URI`, `MONGODB_DB=pulseai`,
+   `FALLBACK_MODEL`, `MODEL_DIR=/nonexistent`, `MAX_SEQ_LENGTH=256` and `CORS_ORIGINS`
+   (your Vercel URL).
+
+> **No Dockerfile changes are needed.** Spaces fix the port at 7860, Render injects
+> `$PORT`, and local development uses 8000 — `docker-entrypoint.sh` resolves whichever is
+> set, so the same image runs unmodified on all three.
 
 ### If you use Render anyway
 
