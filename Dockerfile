@@ -40,6 +40,9 @@ RUN useradd --create-home --uid 1000 pulseai
 WORKDIR /app
 COPY --from=build /install /usr/local
 
+COPY --chown=pulseai:pulseai docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
+
 COPY --chown=pulseai:pulseai src/ ./src/
 COPY --chown=pulseai:pulseai api/ ./api/
 COPY --chown=pulseai:pulseai reports/metrics.json ./reports/metrics.json
@@ -52,13 +55,19 @@ COPY --chown=pulseai:pulseai models/ ./models/
 RUN mkdir -p /app/.cache/huggingface && chown -R pulseai:pulseai /app/.cache
 
 USER pulseai
-EXPOSE 8000
+
+# 8000 locally; Hugging Face Spaces fixes it at 7860 and Render injects $PORT.
+# The entrypoint resolves whichever is set, so this is documentation only.
+EXPOSE 8000 7860
 
 # Checks the app's own dependency-aware endpoint rather than just "is the port
-# open", so a container that cannot reach Atlas is visibly degraded.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \
-    CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+# open", so a container that cannot reach Atlas is visibly degraded. The port is
+# resolved the same way the entrypoint resolves it.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
+    CMD python -c "import os,sys,urllib.request; p=os.getenv('PORT') or os.getenv('API_PORT') or '8000'; sys.exit(0 if urllib.request.urlopen(f'http://127.0.0.1:{p}/health', timeout=4).status == 200 else 1)"
 
 # One worker by default: each worker loads its own copy of the model into
 # memory. Scale with replicas rather than workers unless the host has the RAM.
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# The entrypoint picks the port from PORT / API_PORT / the 8000 default, so one
+# image runs unchanged on Hugging Face Spaces (7860), Render ($PORT) and locally.
+ENTRYPOINT ["./docker-entrypoint.sh"]
