@@ -82,12 +82,24 @@ function SidebarContent({ onNavigate }) {
   return (
     <>
       <div className="flex items-center gap-2.5 px-5 py-5">
+        {/* The same pulse mark as the favicon, inlined rather than loaded from
+            /favicon.svg so it inherits the theme's accent colour and stays
+            crisp at any zoom. */}
         <span
-          className="grid h-8 w-8 place-items-center rounded-lg text-[15px] font-bold"
-          style={{ background: 'var(--accent)', color: 'var(--accent-contrast)' }}
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg"
+          style={{ background: 'var(--accent)' }}
           aria-hidden
         >
-          P
+          <svg viewBox="0 0 32 32" className="h-5 w-5" role="presentation">
+            <path
+              d="M4 17h5l3-7 4 13 3-8h9"
+              fill="none"
+              stroke="var(--accent-contrast)"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
         <span className="min-w-0">
           <span className="block text-[14px] font-semibold leading-tight">PulseAI</span>
