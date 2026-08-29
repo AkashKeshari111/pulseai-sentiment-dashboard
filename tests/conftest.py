@@ -23,6 +23,9 @@ sys.path.insert(0, str(ROOT))
 os.environ.setdefault("MODEL_DIR", str(ROOT / "models" / "__unit_test_none__"))
 os.environ.setdefault("FALLBACK_MODEL", "")
 os.environ.setdefault("MONGODB_URI", "")
+# Left unset deliberately: if a quantized ONNX model happens to be present the
+# suite runs against it, which is the backend a deployment actually uses. Set
+# ONNX_MODEL_DIR to a nonexistent path to force the lower tiers instead.
 
 
 @pytest.fixture(scope="session")

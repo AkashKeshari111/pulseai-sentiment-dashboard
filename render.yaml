@@ -1,45 +1,54 @@
 # Render blueprint for the PulseAI API.
 #
-# IMPORTANT — memory. PyTorch plus a 67M-parameter DistilBERT needs roughly
-# 800MB-1GB of RAM at rest. Render's free instance type provides 512MB and this
-# service WILL be OOM-killed on it. `starter` is the smallest plan that works.
+# The free instance type works because this image serves a quantized ONNX model
+# instead of PyTorch. Measured inside a container with a hard 512 MB cap:
 #
-# If a free deployment is the requirement, use Hugging Face Spaces instead
-# (16GB RAM on the free CPU tier) - see docs/DEPLOYMENT.md.
+#     torch + transformers ............. 601 MB   (would be OOM-killed)
+#     onnxruntime + tokenizers ......... 199 MB   (38% of the limit)
+#
+# The 65 MB model is pulled from the Hub on first boot rather than committed,
+# so nothing large lives in git.
 
 services:
   - type: web
     name: pulseai-api
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     region: singapore
     healthCheckPath: /health
     autoDeploy: true
 
     envVars:
-      # Set in the Render dashboard, never committed.
+      # Secret - set in the Render dashboard, never committed.
       - key: MONGODB_URI
         sync: false
+
       - key: MONGODB_DB
         value: pulseai
-      # The fine-tuned checkpoint is not in git (260MB). Publish it to the
-      # Hugging Face Hub and put the repo id here, e.g.
-      # "AkashKeshari111/pulseai-distilbert-sentiment". Leaving MODEL_DIR
-      # pointing at a path that does not exist makes the loader fall through to
-      # this value instead.
+
+      # The quantized model. MODEL_DIR and FALLBACK_MODEL stay empty so the
+      # loader does not try to pull the 268 MB PyTorch checkpoint, which would
+      # not fit here.
+      - key: ONNX_MODEL_REPO
+        value: akashkeshari111/pulseai-distilbert-sentiment-onnx
       - key: MODEL_DIR
-        value: models/distilbert-sentiment
+        value: /nonexistent
       - key: FALLBACK_MODEL
-        sync: false
+        value: ""
+
       - key: MAX_SEQ_LENGTH
         value: 256
-      # The Vercel URL of the dashboard.
+
+      # The dashboard's Vercel origin.
       - key: CORS_ORIGINS
-        sync: false
+        value: https://pulseai-dashboard.vercel.app
+
+      # Set a value here to require X-API-Key on write endpoints.
       - key: API_KEY
         sync: false
-      # Keep the Hub cache on the writable disk rather than re-downloading on
-      # every cold start.
+
+      # /tmp is writable on Render; the image default under /app is not
+      # guaranteed to be across every plan.
       - key: HF_HOME
-        value: /app/.cache/huggingface
+        value: /tmp/hf

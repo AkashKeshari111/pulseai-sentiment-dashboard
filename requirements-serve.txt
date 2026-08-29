@@ -1,0 +1,41 @@
+# ---------------------------------------------------------------------------
+# Serving dependencies only.
+#
+# `requirements.txt` is the development set: it includes torch, transformers,
+# datasets and scikit-learn because training and the notebook need them. None of
+# that is needed to *serve* a quantized ONNX model, and shipping it costs about
+# 460 MB of resident memory.
+#
+#   full stack (torch + transformers) ......... 601 MB RSS
+#   via optimum (still imports torch) ......... 512 MB RSS   <- no saving
+#   this file (onnxruntime + tokenizers) ...... 141 MB RSS
+#
+# 141 MB plus the web stack lands near 260 MB, which is what makes a 512 MB free
+# container viable. Measured, not estimated - see scripts/quantize_model.py.
+# ---------------------------------------------------------------------------
+
+# --- Inference (no PyTorch, no transformers, no optimum) --------------------
+onnxruntime>=1.19
+tokenizers>=0.19
+numpy>=1.26
+
+# --- Model download at boot -------------------------------------------------
+# Small: requests + filelock + tqdm. Pulls the 65 MB ONNX artefact named by
+# ONNX_MODEL_REPO so the weights stay out of git.
+huggingface-hub>=0.25
+
+# --- API --------------------------------------------------------------------
+fastapi>=0.141
+uvicorn[standard]>=0.30
+pydantic>=2.8
+python-multipart>=0.0.9
+sse-starlette>=2.1
+orjson>=3.10
+
+# --- Database ---------------------------------------------------------------
+motor>=3.5
+pymongo>=4.8
+dnspython>=2.6
+
+# --- Config -----------------------------------------------------------------
+python-dotenv>=1.0

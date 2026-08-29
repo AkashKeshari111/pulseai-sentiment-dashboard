@@ -28,7 +28,7 @@ class TestSystemEndpoints:
 
     def test_model_info_describes_the_loaded_backend(self, client):
         body = client.get("/api/model/info").json()
-        assert body["backend"] in {"transformer", "sklearn", "lexicon"}
+        assert body["backend"] in {"onnx", "transformer", "sklearn", "lexicon"}
         assert body["labels"] == ["negative", "neutral", "positive"]
 
     def test_openapi_schema_is_valid(self, client):
@@ -216,8 +216,20 @@ class TestEngine:
         assert negated["negative"] > negated["positive"]
 
     def test_batch_and_single_predictions_agree(self, engine):
+        """Batching must not change the decision.
+
+        The tolerance is backend-dependent, and that is a real property rather
+        than a fudge. Dynamic INT8 quantization derives activation scales from
+        the tensor it is given at runtime, so a padded batch quantizes slightly
+        differently from a single unpadded input. The effect is ~1e-2 on the
+        probabilities and never on the label; the deterministic backends agree
+        to floating-point noise.
+        """
         text = "The refund process was a nightmare"
         single = engine.predict(text)
         batched = engine.predict_batch([text, "unrelated filler"])[0]
+
         assert single.label == batched.label
-        assert single.scores == pytest.approx(batched.scores, abs=1e-6)
+
+        tolerance = 2e-2 if engine.backend == "onnx" else 1e-6
+        assert single.scores == pytest.approx(batched.scores, abs=tolerance)
