@@ -58,6 +58,7 @@ const TOKENS = {
   series1: '--series-1',
   series2: '--series-2',
   series3: '--series-3',
+  series4: '--series-4',
   seq100: '--seq-100',
   seq250: '--seq-250',
   seq400: '--seq-400',

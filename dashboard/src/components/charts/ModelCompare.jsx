@@ -1,9 +1,9 @@
 /**
- * Baseline vs fine-tuned transformer, on the same held-out test set.
+ * Every model trained for this project, on the same held-out test set.
  *
  * Grouped bars, not stacked: these are competing measurements of the same
  * quantity, so they must share a baseline and sit side by side to be compared.
- * The two models are identities, so they take categorical slots 1 and 2.
+ * Each model is an identity, so they take categorical slots in a fixed order.
  */
 
 import {
@@ -28,12 +28,15 @@ const METRICS = [
 /** Short axis-friendly names. Unknown keys fall back to a tidied key. */
 const SHORT_NAMES = {
   baseline: 'TF-IDF baseline',
-  distilbert: 'DistilBERT (256 tok)',
   distilbert_seq128: 'DistilBERT (128 tok)',
+  distilbert: 'DistilBERT (256 tok)',
+  distilbert_int8: 'DistilBERT INT8 (deployed)',
 }
 
-/** Fixed left-to-right order: control first, ablation, then the final model. */
-const ORDER = ['baseline', 'distilbert_seq128', 'distilbert']
+/** Fixed left-to-right order: control, the losing ablation, then the two
+ *  models that improved on it. Ordering is explicit so a series never changes
+ *  colour just because metrics.json was written in a different sequence. */
+const ORDER = ['baseline', 'distilbert_seq128', 'distilbert', 'distilbert_int8']
 
 const shortName = (key) =>
   SHORT_NAMES[key] ?? key.replace(/[_-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
@@ -63,7 +66,15 @@ export function ModelCompare({ models = {} }) {
     return row
   })
 
-  const palette = [colors.series1, colors.series2, colors.series3]
+  // The validated categorical order: blue, orange, aqua, yellow. Slot 4 must be
+  // a distinct hue, not a lighter blue - two blues side by side are exactly
+  // what a grouped bar chart cannot afford.
+  const palette = [colors.series1, colors.series2, colors.series3, colors.series4]
+
+  // Bars thin and labels drop out as the series count grows, so the chart stays
+  // readable whether the repo has one trained model or four.
+  const barSize = names.length > 3 ? 22 : 34
+  const labelDirectly = names.length <= 3
 
   const renderTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null
@@ -130,19 +141,23 @@ export function ModelCompare({ models = {} }) {
                 key={short}
                 dataKey={short}
                 fill={palette[index]}
-                barSize={34}
+                barSize={barSize}
                 radius={[4, 4, 0, 0]}
                 isAnimationActive={false}
               >
-                {/* Three metrics x two models is few enough to label directly,
-                    which removes the need to read values off the axis. */}
-                <LabelList
-                  dataKey={short}
-                  position="top"
-                  offset={6}
-                  formatter={(value) => (Number.isFinite(value) ? value.toFixed(3) : '')}
-                  style={{ fontSize: 10.5, fill: 'var(--text-secondary)' }}
-                />
+                {/* Direct labels only while they still fit. Past three series
+                    the numbers collide, and an unreadable label is worse than
+                    no label - the tooltip and the table view still carry the
+                    exact values. */}
+                {labelDirectly && (
+                  <LabelList
+                    dataKey={short}
+                    position="top"
+                    offset={6}
+                    formatter={(value) => (Number.isFinite(value) ? value.toFixed(3) : '')}
+                    style={{ fontSize: 10.5, fill: 'var(--text-secondary)' }}
+                  />
+                )}
               </Bar>
             ))}
           </BarChart>

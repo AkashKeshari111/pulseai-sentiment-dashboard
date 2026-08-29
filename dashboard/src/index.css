@@ -49,10 +49,15 @@
   --sentiment-neutral-soft: rgba(137, 135, 129, 0.14);
   --sentiment-positive-soft: rgba(42, 120, 214, 0.14);
 
-  /* Categorical slots - used where series are identities, not polarity */
+  /* Categorical slots - used where series are identities, not polarity.
+     Blue, orange, aqua, yellow: the validated theme order. Worst adjacent pair
+     measures dE 9.1 under protanopia and 22.9 to normal vision. Slots 3 and 4
+     sit below 3:1 against the light surface, which is why every chart using
+     them also ships a legend and a table view. */
   --series-1: #2a78d6;
   --series-2: #eb6834;
   --series-3: #1baf7a;
+  --series-4: #eda100;
 
   /* Sequential blue ramp - magnitude encodings (confusion matrix) */
   --seq-100: #cde2fb;
@@ -96,6 +101,7 @@
     --series-1: #3987e5;
     --series-2: #d95926;
     --series-3: #199e70;
+    --series-4: #c98500;
 
     --seq-100: #0d366b;
     --seq-250: #1c5cab;
@@ -132,6 +138,7 @@
   --series-1: #3987e5;
   --series-2: #d95926;
   --series-3: #199e70;
+  --series-4: #c98500;
 
   --seq-100: #0d366b;
   --seq-250: #1c5cab;
