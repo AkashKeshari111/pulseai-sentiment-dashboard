@@ -55,19 +55,19 @@ Evaluated on **2,000 held-out test reviews**.
 
 | Metric | TF-IDF + Logistic Regression | DistilBERT (fine-tuned) | Δ |
 |---|---|---|---|
-| Accuracy | 0.7250 | **0.7170** | -0.0080 |
-| **F1 (macro)** | 0.7237 | **0.7180** | -0.0057 |
-| F1 (weighted) | 0.7238 | **0.7180** | -0.0057 |
+| Accuracy | 0.7250 | **0.7400** | +0.0150 |
+| **F1 (macro)** | 0.7237 | **0.7390** | +0.0153 |
+| F1 (weighted) | 0.7238 | **0.7390** | +0.0153 |
 
-Fine-tuning is worth **-0.6 points** of macro-F1 (-0.8% relative) over a baseline that trains in seconds. The transformer took **105 minutes** on cpu.
+Fine-tuning is worth **+1.5 points** of macro-F1 (+2.1% relative) over a baseline that trains in seconds. The transformer took **226 minutes** on cpu.
 
 ### Per-class performance
 
 | Class | Precision | Recall | F1 | Support |
 |---|---|---|---|---|
-| negative | 0.789 | 0.769 | 0.779 | 667 |
-| neutral | 0.599 | 0.622 | 0.610 | 666 |
-| positive | 0.769 | 0.760 | 0.765 | 667 |
+| negative | 0.826 | 0.786 | 0.806 | 667 |
+| neutral | 0.637 | 0.611 | 0.624 | 666 |
+| positive | 0.755 | 0.823 | 0.788 | 667 |
 
 ### Confusion matrix
 
@@ -75,11 +75,11 @@ Rows are the true label, columns the prediction.
 
 | | pred negative | pred neutral | pred positive |
 |---|---|---|---|
-| **true negative** | 513 | 135 | 19 |
-| **true neutral** | 119 | 414 | 133 |
-| **true positive** | 18 | 142 | 507 |
+| **true negative** | 524 | 128 | 15 |
+| **true neutral** | 96 | 407 | 163 |
+| **true positive** | 14 | 104 | 549 |
 
-Single-sample inference latency: **88.86 ms** on cpu.
+Single-sample inference latency: **159.35 ms** on cpu.
 <!-- RESULTS:END -->
 
 ---

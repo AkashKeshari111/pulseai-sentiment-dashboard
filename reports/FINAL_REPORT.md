@@ -30,10 +30,10 @@ which channel is moving, and what are people actually complaining about.*
 <!-- SUMMARY:START -->
 **Headline results**
 
-- Fine-tuned DistilBERT reaches **0.7180 macro-F1** and **71.7% accuracy** on 2,000 held-out reviews.
-- That is **-0.6 points** of macro-F1 over a TF-IDF + Logistic Regression baseline scoring 0.7237.
-- Strongest class **negative** (F1 0.779); weakest **neutral** (F1 0.610) — traced to label noise in the 3-star mapping, not to model capacity.
-- Inference runs in **88.86 ms** per sample on cpu, which is what makes real-time serving viable.
+- Fine-tuned DistilBERT reaches **0.7390 macro-F1** and **74.0% accuracy** on 2,000 held-out reviews.
+- That is **+1.5 points** of macro-F1 over a TF-IDF + Logistic Regression baseline scoring 0.7237.
+- Strongest class **negative** (F1 0.806); weakest **neutral** (F1 0.624) — traced to label noise in the 3-star mapping, not to model capacity.
+- Inference runs in **159.35 ms** per sample on cpu, which is what makes real-time serving viable.
 <!-- SUMMARY:END -->
 
 ---
@@ -228,19 +228,19 @@ Evaluated on **2,000 held-out test reviews**.
 
 | Metric | TF-IDF + Logistic Regression | DistilBERT (fine-tuned) | Δ |
 |---|---|---|---|
-| Accuracy | 0.7250 | **0.7170** | -0.0080 |
-| **F1 (macro)** | 0.7237 | **0.7180** | -0.0057 |
-| F1 (weighted) | 0.7238 | **0.7180** | -0.0057 |
+| Accuracy | 0.7250 | **0.7400** | +0.0150 |
+| **F1 (macro)** | 0.7237 | **0.7390** | +0.0153 |
+| F1 (weighted) | 0.7238 | **0.7390** | +0.0153 |
 
-Fine-tuning is worth **-0.6 points** of macro-F1 (-0.8% relative) over a baseline that trains in seconds. The transformer took **105 minutes** on cpu.
+Fine-tuning is worth **+1.5 points** of macro-F1 (+2.1% relative) over a baseline that trains in seconds. The transformer took **226 minutes** on cpu.
 
 ### Per-class performance
 
 | Class | Precision | Recall | F1 | Support |
 |---|---|---|---|---|
-| negative | 0.789 | 0.769 | 0.779 | 667 |
-| neutral | 0.599 | 0.622 | 0.610 | 666 |
-| positive | 0.769 | 0.760 | 0.765 | 667 |
+| negative | 0.826 | 0.786 | 0.806 | 667 |
+| neutral | 0.637 | 0.611 | 0.624 | 666 |
+| positive | 0.755 | 0.823 | 0.788 | 667 |
 
 ### Confusion matrix
 
@@ -248,11 +248,11 @@ Rows are the true label, columns the prediction.
 
 | | pred negative | pred neutral | pred positive |
 |---|---|---|---|
-| **true negative** | 513 | 135 | 19 |
-| **true neutral** | 119 | 414 | 133 |
-| **true positive** | 18 | 142 | 507 |
+| **true negative** | 524 | 128 | 15 |
+| **true neutral** | 96 | 407 | 163 |
+| **true positive** | 14 | 104 | 549 |
 
-Single-sample inference latency: **88.86 ms** on cpu.
+Single-sample inference latency: **159.35 ms** on cpu.
 <!-- RESULTS:END -->
 
 ---
@@ -272,11 +272,11 @@ On the held-out test set of 2,000 reviews:
 
 | Outcome | Count | Share of all | Share of errors |
 |---|---|---|---|
-| Correct | 1,434 | 71.7% | — |
-| Adjacent error (low cost) | 529 | 26.5% | 93.5% |
-| Polar error (expensive) | 37 | 1.8% | 6.5% |
+| Correct | 1,480 | 74.0% | — |
+| Adjacent error (low cost) | 491 | 24.6% | 94.4% |
+| Polar error (expensive) | 29 | 1.5% | 5.6% |
 
-Only **1.8%** of all predictions are polar confusions — someone genuinely angry filed as happy, or the reverse. The overwhelming majority of the model's mistakes place feedback one step away from where it belongs, which a human triage queue absorbs without harm.
+Only **1.5%** of all predictions are polar confusions — someone genuinely angry filed as happy, or the reverse. The overwhelming majority of the model's mistakes place feedback one step away from where it belongs, which a human triage queue absorbs without harm.
 <!-- ERRORS:END -->
 
 Two models with identical accuracy but different error *structure* have materially

@@ -17,6 +17,15 @@ env/
 .env.local
 *.local
 
+# Credential files. Never let a token sitting in the working tree reach a commit
+# - a leaked token is public the moment the push lands, and history is forever.
+*token*.txt
+*token*.json
+*.pem
+*.key
+.hf_token
+secrets/
+
 # Node
 node_modules/
 dist/

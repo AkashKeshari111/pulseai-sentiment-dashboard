@@ -337,6 +337,81 @@
         "seed": 42
       },
       "ablation_note": "First run. Only 51.8% of reviews fit inside a 128-token window, so long reviews were truncated mid-text. Kept as the control for the 256-token run."
+    },
+    "distilbert": {
+      "accuracy": 0.74,
+      "f1_macro": 0.7389834665853217,
+      "f1_weighted": 0.7390410809239782,
+      "per_class": {
+        "negative": {
+          "precision": 0.8264984227129337,
+          "recall": 0.7856071964017991,
+          "f1": 0.8055342044581092,
+          "support": 667
+        },
+        "neutral": {
+          "precision": 0.6369327073552425,
+          "recall": 0.6111111111111112,
+          "f1": 0.6237547892720307,
+          "support": 666
+        },
+        "positive": {
+          "precision": 0.7551581843191196,
+          "recall": 0.823088455772114,
+          "f1": 0.787661406025825,
+          "support": 667
+        }
+      },
+      "confusion_matrix": [
+        [
+          524,
+          128,
+          15
+        ],
+        [
+          96,
+          407,
+          163
+        ],
+        [
+          14,
+          104,
+          549
+        ]
+      ],
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "n_samples": 2000,
+      "mean_confidence": 0.8185701370239258,
+      "mean_confidence_correct": 0.8530585169792175,
+      "mean_confidence_incorrect": 0.7204107046127319,
+      "model": "DistilBERT fine-tuned (max_seq_length=256)",
+      "model_key": "distilbert",
+      "parameters": 66955779,
+      "history": [],
+      "best_epoch": 2,
+      "val_f1_macro": null,
+      "train_seconds": 13590.0,
+      "latency_ms_per_sample": 159.35,
+      "device": "cpu",
+      "hyperparameters": {
+        "dataset": "yelp_review_full",
+        "base_checkpoint": "distilbert-base-uncased",
+        "train_size": 12000,
+        "val_size": 2000,
+        "test_size": 2000,
+        "max_seq_length": 256,
+        "epochs": 2,
+        "batch_size": 16,
+        "eval_batch_size": 64,
+        "learning_rate": 3e-05,
+        "weight_decay": 0.01,
+        "warmup_ratio": 0.1,
+        "seed": 42
+      }
     }
   },
   "labels": [
