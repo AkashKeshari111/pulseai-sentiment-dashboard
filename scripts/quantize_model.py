@@ -56,12 +56,22 @@ def export_and_quantize(source: Path, target: Path) -> tuple[float, float]:
     fp32_mb = directory_size_mb(fp32_dir)
     print(f"[onnx] fp32 export: {fp32_mb:.0f} MB")
 
-    print("[onnx] quantizing to INT8 (dynamic, per-channel)...")
+    print("[onnx] quantizing to INT8 (dynamic, per-channel, reduce_range)...")
     quantizer = ORTQuantizer.from_pretrained(fp32_dir)
     # Dynamic quantization computes activation ranges at inference time, so it
-    # needs no calibration dataset. avx512_vnni is the widest instruction set
-    # that modern x86 servers support; it falls back cleanly on older CPUs.
-    config = AutoQuantizationConfig.avx512_vnni(is_static=False, per_channel=True)
+    # needs no calibration dataset.
+    #
+    # avx2 + reduce_range, NOT avx512_vnni, and this is not a detail. A model
+    # quantized for AVX-512 VNNI runs on a CPU without those instructions but
+    # can *silently* produce garbage: U8S8 accumulation saturates, and the
+    # output collapses towards a uniform distribution with no error raised.
+    # This was observed in production - identical image and weights gave
+    # "negative 98.8%" on a VNNI laptop and "neutral 37%" on the deploy host.
+    # reduce_range keeps weights in 7 bits, which removes the saturation and
+    # makes the artefact portable across x86 generations.
+    config = AutoQuantizationConfig.avx2(
+        is_static=False, per_channel=True, reduce_range=True
+    )
     quantizer.quantize(save_dir=target, quantization_config=config)
     tokenizer.save_pretrained(target)
 

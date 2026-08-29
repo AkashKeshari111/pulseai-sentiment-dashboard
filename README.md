@@ -258,7 +258,7 @@ curl -X POST http://localhost:8020/api/predict \
 
 ## Design decisions
 
-Eleven choices that shaped this project, and the reasoning behind each.
+Twelve choices that shaped this project, and the reasoning behind each.
 
 **1 · Three classes, not two.** Most real feedback is mixed — *"the food was good but
 we waited 40 minutes"*. Forcing it to a pole either inflates the complaint rate or hides
@@ -297,20 +297,32 @@ controlled experiment. Both runs are kept in `reports/metrics.json` — the losi
 purpose, because the gap between them is the clearest evidence here that a preprocessing
 decision can outweigh the choice of model.
 
-**8 · Aggregation pipelines, not application-side counting.** Pulling 100k documents into
+**8 · The deployed model is quantized, and quantized for *portability*.**
+The PyTorch service measures 601 MB resident — above the 512 MB ceiling of every free
+container tier. INT8 quantization brings that to 199 MB (measured inside a container with
+a hard cap) at 65 MB on disk, and macro-F1 actually rose slightly, from 0.7390 to 0.7437.
+
+The subtlety is which INT8 build. A model quantized for AVX-512 VNNI runs on a CPU
+without those instructions but can **silently produce garbage** — U8S8 accumulation
+saturates, no error is raised. Observed directly: identical image and weights returned
+`negative 98.8%` locally and `neutral 37%` on the deploy host. Rebuilding with
+`avx2` + `reduce_range=True` fixed it. That build is ~1.7x faster than PyTorch rather
+than ~3.4x, which is the right trade: correct everywhere beats fast on one machine.
+
+**9 · Aggregation pipelines, not application-side counting.** Pulling 100k documents into
 Python to count them does not survive real volume. Every dashboard number is computed by
 MongoDB.
 
-**9 · One filter builder for both surfaces.** The KPI cards and the record table share a
+**10 · One filter builder for both surfaces.** The KPI cards and the record table share a
 single query builder, so "42 negative" on the Overview and "42 rows" in the Explorer are
 guaranteed to be the same query. Disagreeing numbers is what makes a dashboard untrusted.
 
-**10 · Graceful degradation everywhere.** The model loader falls through four backends
+**11 · Graceful degradation everywhere.** The model loader falls through four backends
 (fine-tuned checkpoint → Hub model → TF-IDF baseline → lexicon). A missing database leaves
 `/api/predict` working and reports *why* through `/health`. A live demo should never die on
 a flaky network.
 
-**11 · The chart palette was measured, not chosen.** Sentiment is a diverging scale, and
+**12 · The chart palette was measured, not chosen.** Sentiment is a diverging scale, and
 the obvious red/green encoding measures **ΔE 4.1** under deuteranopia — indistinguishable
 for roughly 1 in 12 men. Red ↔ grey ↔ **blue** measures **ΔE 8.7 (light) / 8.5 (dark)**,
 clearing the threshold in both themes. Every chart also carries a legend, direct labels
