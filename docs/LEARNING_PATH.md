@@ -168,8 +168,8 @@ python
 >>> for cap in (128, 256): print(cap, f"{(lens <= cap).mean():.1%} of reviews fit")
 ```
 
-You will see it with your own eyes: ~1.4 tokens per word, and 128 tokens covering only
-about half the corpus. Then open the **Model card** page in the dashboard and look at the
+You will see it with your own eyes: ~1.29 tokens per word, and 128 tokens covering only
+just over half the corpus. Then open the **Model card** page in the dashboard and look at the
 two runs side by side.
 
 **Answer in your notebook**

@@ -391,10 +391,27 @@
       "model": "DistilBERT fine-tuned (max_seq_length=256)",
       "model_key": "distilbert",
       "parameters": 66955779,
-      "history": [],
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.7403,
+          "val_loss": 0.582,
+          "val_accuracy": 0.7515,
+          "val_f1_macro": 0.7542,
+          "seconds": 5442.8
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.4848,
+          "val_loss": 0.5885,
+          "val_accuracy": 0.758,
+          "val_f1_macro": 0.7576,
+          "seconds": 8146.9
+        }
+      ],
       "best_epoch": 2,
-      "val_f1_macro": null,
-      "train_seconds": 13590.0,
+      "val_f1_macro": 0.7576,
+      "train_seconds": 13589.7,
       "latency_ms_per_sample": 159.35,
       "device": "cpu",
       "hyperparameters": {
@@ -411,7 +428,8 @@
         "weight_decay": 0.01,
         "warmup_ratio": 0.1,
         "seed": 42
-      }
+      },
+      "training_note": "The scheduled third epoch was interrupted by a host restart. The epoch-2 checkpoint had already been written and is the model evaluated here; validation macro-F1 had moved only +0.0034 from epoch 1 to 2, so the remaining epoch was not expected to change the outcome materially."
     },
     "distilbert_int8": {
       "accuracy": 0.7465,

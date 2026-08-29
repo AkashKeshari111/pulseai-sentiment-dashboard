@@ -189,18 +189,18 @@ That is an unusual thing to put in a report, and it is here because the diagnosi
 out to be worth more than the number would have been.
 
 **The mistake.** The token budget was chosen by reading the *word*-length distribution:
-reviews average around 110 words, so 128 looked comfortable. But WordPiece splits rare
+reviews average around 128 words, so 128 looked comfortable. But WordPiece splits rare
 words, proper nouns and misspellings into several sub-tokens. Measured properly:
 
 | | words | tokens |
 |---|---|---|
-| mean | ~110 | **161** |
-| median | ~85 | 125 |
-| 90th percentile | ~230 | **307** |
+| mean | ~128 | **165** |
+| median | ~95 | 126 |
+| 90th percentile | ~250 | **339** |
 
-That is roughly **1.4 tokens per word**, and the tail is far worse than the mean suggests.
+That is roughly **1.29 tokens per word**, and the tail is far worse than the mean suggests.
 
-**The consequence.** At 128 tokens only **51.8%** of reviews fit. Every longer review was
+**The consequence.** At 128 tokens only **51.0%** of reviews fit. Every longer review was
 cut mid-text, so the model never saw the ending — which in a review is frequently exactly
 where the verdict lands (*"…but overall I would not go back"*). Meanwhile TF-IDF reads
 every word of every review, because a bag of words has no length limit at all.
@@ -210,7 +210,7 @@ transformers are worse at this task; it was losing because it had been handed ha
 evidence.
 
 **The fix, as a controlled experiment.** Re-running at `max_seq_length = 256` — which
-covers ~84% of reviews — with architecture, data, seed and every other hyper-parameter held
+covers ~82% of reviews — with architecture, data, seed and every other hyper-parameter held
 constant isolates the effect of the context window to a single changed number. Both runs
 are kept in `reports/metrics.json`, reported side by side below, and shown on the
 dashboard's Model Card page.

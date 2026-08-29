@@ -196,12 +196,12 @@ export function ModelCardPage() {
               <MetricStat
                 label="128 tokens"
                 value={ablation.f1_macro.toFixed(4)}
-                hint="~52% of reviews fit — the rest were cut mid-text"
+                hint="51% of reviews fit — the rest were cut mid-text"
               />
               <MetricStat
                 label="256 tokens"
                 value={finalRun.f1_macro.toFixed(4)}
-                hint="~84% of reviews fit"
+                hint="~82% of reviews fit"
               />
               <MetricStat
                 label="Difference"
@@ -215,7 +215,7 @@ export function ModelCardPage() {
                 ? 'lost to the TF-IDF baseline'
                 : 'barely matched the TF-IDF baseline'}
               . The cause was not the model: WordPiece splits review text into roughly 1.4
-              tokens per word, so a 128-token budget covered only about half the corpus and
+              tokens per word, so a 128-token budget covered only just over half the corpus and
               the transformer was reading half of every long review while the bag-of-words
               baseline read all of it. Doubling the window fixed it. The losing run is kept
               here deliberately — the gap between these two numbers is the clearest evidence

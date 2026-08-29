@@ -290,9 +290,9 @@ selection on validation macro-F1 rather than training loss.
 **7 · The token budget was measured, not assumed — and getting it wrong cost real points.**
 The first fine-tuning run used a 128-token window, chosen from the *word*-length
 distribution, and **lost to the TF-IDF baseline**. WordPiece splits review text into
-roughly 1.4 tokens per word, so 128 tokens covered only ~52% of the corpus: the
+roughly 1.29 tokens per word, so 128 tokens covered only 51% of the corpus: the
 transformer was reading half of every long review while the bag-of-words model read all of
-it. Re-running at 256 tokens (~84% coverage) with everything else held constant is the
+it. Re-running at 256 tokens (~82% coverage) with everything else held constant is the
 controlled experiment. Both runs are kept in `reports/metrics.json` — the losing one on
 purpose, because the gap between them is the clearest evidence here that a preprocessing
 decision can outweigh the choice of model.
